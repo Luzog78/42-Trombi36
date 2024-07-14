@@ -1,0 +1,251 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   trombi.css                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/11 21:28:48 by ysabik            #+#    #+#             */
+/*   Updated: 2024/07/14 16:05:13 by ysabik           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+body {
+	color: #fff;
+	background-color: #201e30;
+	font-family: 'Arial', sans-serif;
+}
+
+#bg {
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	opacity: .5;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+
+.container {
+	margin-bottom: 100px;
+}
+
+#tutors, #piscineux {
+	width: fit-content;
+	max-width: 90%;
+	display: flex;
+	justify-content: space-evenly;
+	align-content: flex-start;
+	margin: auto;
+	margin-top: 50px;
+	flex-wrap: wrap;
+	gap: 40px 40px;
+	margin-bottom: 100px;
+}
+
+.user {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #201e30aa;
+	border-radius: 5px;
+	overflow: hidden;
+	box-shadow: 0 0 10px 0 #000;
+	height: fit-content;
+	cursor: pointer;
+	transition: 1s;
+}
+
+.user.tutor {
+	box-shadow: 0 0 10px 0 #fff;
+}
+
+.user:hover {
+	box-shadow: 0 0 20px 0 #55f;
+	scale: 1.25;
+	z-index: 1;
+}
+
+.user.tutor:hover {
+	box-shadow: 0 0 20px 0 rgb(255, 147, 85);
+}
+
+.user .picture {
+	width: 225px;
+	overflow: hidden;
+}
+
+.user .info {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	width: calc(100% - 20px);
+}
+
+.user .info .name {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	font-size: 18px;
+	color: #55f;
+}
+
+.user.tutor .info .name {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	font-size: 18px;
+	color: rgb(255, 147, 85);
+}
+
+.user .info .login {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	font-size: 18px;
+	color: #666;
+	font-style: italic;
+}
+
+#config {
+	display: flex;
+	width: fit-content;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	border-radius: 5px;
+	--op: .5;
+	background: -moz-linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	background: linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	margin: 12px;
+	overflow: hidden;
+}
+
+#config button {
+	color: #fff;
+	background: transparent;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	transition: .3s;
+}
+
+#config button:hover {
+	background-color: #0002;
+}
+
+#config .sep {
+	width: 1px;
+	min-height: 100%;
+	background-color: #aaa;
+}
+
+#footer {
+	display: flex;
+	width: 100%;
+	justify-content: flex-start;
+	gap: 10px;
+}
+
+#footer a {
+	color: #55f;
+	text-decoration: none;
+	transition: .3s;
+}
+
+#footer a:hover {
+	color: #88f;
+}
+
+#search-container {
+	position: fixed;
+	top: 5vh;
+	width: 80vw;
+	margin-left: 10vw;
+	border-radius: 20px;
+	overflow: hidden;
+	display: none;
+	background-color: #33ad;
+	box-shadow: 0 0 20px 0 #000;
+}
+
+#search {
+	background: transparent;
+	width: 100%;
+	font-size: 32px;
+	padding: 16px;
+	border: none;
+	color: #ddd;
+	border-radius: 20px;
+	box-shadow: 0 0 0 2px inset #aaa4;
+}
+
+#header .row {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+#auth42, #logout {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	align-items: center;
+	height: fit-content;
+	background-color: #000;
+	color: #fff;
+	border-radius: 4px;
+	overflow: hidden;
+	cursor: pointer;
+	transition: .2s;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 10px;
+	margin-right: 10px;
+	border: none;
+}
+
+#auth42:hover, #logout:hover {
+	background-color: #222;
+}
+
+#auth42-container, #logout-container,
+#auth42-container:visited, #logout-container:visited,
+#auth42-container:link, #logout-container:link,
+#auth42-container:active, #logout-container:active {
+	z-index: 1;
+	text-decoration: none !important;
+}
+
+#auth42 span, #logout span {
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+}
+
+#auth42 img, #logout img {
+	width: 30px;
+	height: 30px;
+}
+
+@keyframes rotate {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes appear {
+	from {
+		transform: translateY(-300%);
+	}
+	to {
+		transform: translateY(0vh);
+	}
+}

@@ -1,0 +1,215 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   project.css                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/14 12:41:34 by ysabik            #+#    #+#             */
+/*   Updated: 2024/07/14 21:05:29 by ysabik           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+body {
+	color: #fff;
+	background-color: #000;
+	font-family: 'Arial', sans-serif;
+}
+
+#bg {
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	opacity: .5;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+
+#header {
+	margin-top: 15px;
+	margin-bottom: 25px;
+}
+
+#header h1 {
+	margin: 0;
+	margin-bottom: 15px;
+}
+
+#header .row {
+	width: 100%;
+	text-align: center;
+	position: relative;
+}
+
+#header hr {
+	color: #0aa;
+	width: 60%;
+}
+
+#auth42, #logout {
+	position: absolute;
+	top: -20px;
+	right: 0;
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	align-items: center;
+	height: fit-content;
+	background-color: #333;
+	color: #fff;
+	border-radius: 4px;
+	overflow: hidden;
+	cursor: pointer;
+	transition: .2s;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 10px;
+	margin-right: 10px;
+	border: none;
+}
+
+#auth42:hover, #logout:hover {
+	background-color: #222;
+}
+
+#auth42-container, #logout-container,
+#auth42-container:visited, #logout-container:visited,
+#auth42-container:link, #logout-container:link,
+#auth42-container:active, #logout-container:active {
+	z-index: 1;
+	text-decoration: none !important;
+}
+
+#auth42 span, #logout span {
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+}
+
+#auth42 img, #logout img {
+	width: 30px;
+	height: 30px;
+}
+
+#footer {
+	display: flex;
+	width: 100%;
+	justify-content: flex-start;
+	gap: 10px;
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+}
+
+#footer a {
+	color: #55f;
+	text-decoration: none;
+	transition: .3s;
+}
+
+#footer a:hover {
+	color: #88f;
+}
+
+.container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 30px;
+}
+
+.container .row {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+}
+
+.center {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.picture {
+	height: 100px;
+	width: 100px;
+	border-radius: 1000%;
+	overflow: hidden;
+	object-fit: cover;
+}
+
+.left, .right {
+	display: flex;
+	gap: 1px;
+}
+
+.left {
+	flex-direction: row-reverse;
+}
+
+.left > *, .right > * {
+	height: 80px;
+	width: calc(calc(80vw - 500px) / 200);
+	background-color: #fff;
+}
+
+.left > *:last-child {
+	border-top-left-radius: 80px;
+	border-bottom-left-radius: 80px;
+}
+
+.right > *:last-child {
+	border-top-right-radius: 80px;
+	border-bottom-right-radius: 80px;
+}
+
+.mark-left, .mark-right {
+	font-size: 24px;
+	font-weight: 800;
+}
+
+.mark-left {
+	margin-right: 10px;
+}
+
+.mark-right {
+	margin-left: 10px;
+}
+
+.login {
+	position: absolute;
+	font-size: 16px;
+	color: #888;
+	font-style: italic;
+	font-weight: 800;
+	top: 105px;
+}
+
+#info {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	--op: .5;
+	background: -moz-linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	background: linear-gradient(90deg, rgba(131,58,180,var(--op)) 0%, rgba(253,29,29,var(--op)) 50%, rgba(252,176,69,var(--op)) 100%);
+	border-radius: 10px;
+	padding: 3px;
+	border-collapse: separate;
+	border-spacing: 5px;
+}
+
+#info td {
+	font-size: 16px;
+	text-align: center;
+}
