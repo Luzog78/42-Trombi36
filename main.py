@@ -3,7 +3,10 @@ from flask import request, session, jsonify, render_template, send_file, redirec
 
 from color import print
 from data import Data
-from fetch_info import fetch_info, fetch_routine, global_data
+from fetch_info import fetch_routine, check_whitelist, global_data
+
+
+forbidden_authorizations = []
 
 
 @Data.app.route('/')
@@ -37,12 +40,6 @@ def route_project(project: str | None = None):
 	if project_data is None:
 		return jsonify({'error': '404 Not Found'}), 404
 	return render_template('project.html', project_data=project_data)
-
-
-@Data.app.route('/fetch')
-def route_fetch():
-	fetch_info(session.get(Data.X_ACCESS_TOKEN))
-	return '''good...'''
 
 
 @Data.app.route('/db/data.json')
@@ -111,9 +108,9 @@ def route_token():
 def route_auth():
 	redirect_pathname = request.args.get('redirect')
 	if redirect_pathname is None:
-		if session.get("redirect"):
-			redirect_pathname = session.get("redirect")
-			session["redirect"] = None
+		if session.get('redirect'):
+			redirect_pathname = session.get('redirect')
+			session['redirect'] = None
 		else:
 			redirect_pathname = '/'
 
@@ -127,11 +124,18 @@ def route_auth():
 	if session.get(Data.X_CODE):
 		response = Data.get_token(session.get(Data.X_CODE))
 		session[Data.X_CODE] = None
+		
+		authorization = response.get(Data.X_ACCESS_TOKEN)
+		if authorization in forbidden_authorizations or not check_whitelist(authorization):
+			forbidden_authorizations.append(authorization)
+			session.modified = True
+			return jsonify({'error': '403 Forbidden: You are not in the whitelist'}), 403
+
 		session[Data.X_FULL_TOKEN] = response
-		session[Data.X_ACCESS_TOKEN] = response[Data.X_ACCESS_TOKEN]
-		session[Data.X_REFRESH_TOKEN] = response[Data.X_REFRESH_TOKEN]
+		session[Data.X_ACCESS_TOKEN] = authorization
+		session[Data.X_REFRESH_TOKEN] = response.get(Data.X_REFRESH_TOKEN)
 		session.modified = True
-		Data.AUTHORIZATION = response[Data.X_ACCESS_TOKEN]
+		Data.AUTHORIZATION = authorization
 		try:
 			with open('db/authorization.key', 'w') as f:
 				f.write(Data.AUTHORIZATION + '\n')

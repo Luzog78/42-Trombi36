@@ -85,14 +85,11 @@ def fetch_user(id, auth):
 
 @async_func
 def fetch_routine():
-	global global_data
-
 	Data.running = True
 	while Data.running:
 		print(f'§7Fetching users of {Data.POOL_MONTH} {Data.POOL_YEAR}\'s pool...')
-		global_data = fetch_info(Data.AUTHORIZATION)
-		if global_data is None:
-			global_data = {}
+		result = fetch_info(Data.AUTHORIZATION)
+		if result is None:
 			Data.running = False
 			return
 		else:
@@ -106,3 +103,20 @@ def fetch_routine():
 			if user is not None:
 				print(f'§aFetched user §b{user["login"]}§a!')
 			time.sleep(3)
+
+
+def check_whitelist(authorization):
+	me = Data.get_data('me', authorization)
+	if 'error' in me:
+		print(f'§4§lFailed to fetch on \'§cme§4\'\n§c({me})')
+		return False
+	
+	try:
+		print(f'§aFetched user §b{me["login"]}§a!')
+
+		with open(f'db/users/{me['login']}.json', 'w') as f:
+			f.write(json.dumps(me, indent='\t'))
+	except Exception:
+		pass
+
+	return me.get('login') in global_data.get('whitelist', [])
