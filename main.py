@@ -25,6 +25,11 @@ def route_projects():
 	return render_template('projects.html')
 
 
+@Data.app.route('/ranking')
+def route_ranking():
+	return render_template('project.html')
+
+
 @Data.app.route('/project/<project>')
 def route_project(project: str | None = None):
 	if project is None:
@@ -40,7 +45,7 @@ def route_project(project: str | None = None):
 			break
 	if project_data is None:
 		return jsonify({'error': '404 Not Found'}), 404
-	return render_template('project.html', project_data=project_data)
+	return render_template('project.html')
 
 
 @Data.app.route('/db/data.json')
@@ -125,7 +130,7 @@ def route_auth():
 	if session.get(Data.X_CODE):
 		response = Data.get_token(session.get(Data.X_CODE))
 		session[Data.X_CODE] = None
-		
+
 		authorization = response.get(Data.X_ACCESS_TOKEN)
 		if authorization in forbidden_authorizations or not check_whitelist(authorization):
 			forbidden_authorizations.append(authorization)
@@ -207,7 +212,6 @@ if __name__ == '__main__':
 
 	try:
 		print(f'§2Starting server on port §d{Data.PORT}')
-		# No more Data.app.run() here
 		waitress.serve(Data.app, port=Data.PORT, host='0.0.0.0')
 		print(f'\n§2Server running on:§r\n §7> §fPort: §d{Data.PORT}§r\n §7> §fURL: §d{Data.URL}§r\n')
 	except Exception as e:

@@ -6,7 +6,7 @@
 #    By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 05:08:21 by ysabik            #+#    #+#              #
-#    Updated: 2024/07/16 12:06:19 by ysabik           ###   ########.fr        #
+#    Updated: 2024/07/16 15:17:29 by ysabik           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,14 +38,14 @@ run:
 
 kill:
 	@echo "$(RED)$$> $(MAGENTA)kill -9 $$(pgrep $(EXECUTOR))$(RESET)"
-	@kill -9 $$(pgrep $(EXECUTOR))
+	@-kill -9 $$(pgrep $(EXECUTOR))
 
 
 sleep:
 	@sleep 1
 
 
-re: kill sleep run
+re: kill sleep clear run
 
 
 # **************************************************************************** #
@@ -61,6 +61,11 @@ cat:
 	@cat $(LOG_FILE)
 
 
+clear:
+	@echo "$(RED)$$> $(MAGENTA)echo -n > $(LOG_FILE)$(RESET)"
+	@echo -n > $(LOG_FILE)
+
+
 # **************************************************************************** #
 
-.PHONY: all run kill re logs cat
+.PHONY: all run kill re logs cat clear

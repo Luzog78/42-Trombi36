@@ -110,7 +110,7 @@ def check_whitelist(authorization):
 	if 'error' in me:
 		print(f'§4§lFailed to fetch on \'§cme§4\'\n§c({me})')
 		return False
-	
+
 	try:
 		print(f'§aFetched user §b{me["login"]}§a!')
 

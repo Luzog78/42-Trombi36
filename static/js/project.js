@@ -6,10 +6,11 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 13:53:38 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/14 21:05:56 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/16 15:57:54 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+const title = document.getElementById('title');
 const container = document.querySelector('.container');
 const presence = document.getElementById('info-presence');
 const average = document.getElementById('info-average');
@@ -20,9 +21,18 @@ const gradStep = 40;
 
 const disabledColor = '#888';
 
+const RANK_SLUG = 'rank';
 
 let mutex = false;
 
+
+function tryAgain() {
+	container.innerHTML = 'Error loading the projects.<br>Try to sign in again.';
+	container.style.color = 'red';
+	container.style.textAlign = 'center';
+	container.style.fontSize = '2em';
+	container.style.fontWeight = 'bold';
+}
 
 function toHex(r, g, b) {
 	let hex = '#';
@@ -52,9 +62,10 @@ function gradient(start, end, t) {
 }
 
 class Profile {
-	constructor(login, picture, mark, validated) {
+	constructor(login, picture, markModifier, mark, validated) {
 		this.login = login;
 		this.picture = picture;
+		this.markModifier = markModifier;
 		this.mark = 0;
 		this.validated = false;
 
@@ -95,12 +106,15 @@ class Profile {
 		this.markRight.classList.add('mark-right');
 		this.row.appendChild(this.markRight);
 
-		this.setMark(mark, validated);
+		if (markModifier != 1)
+			mark = parseFloat(mark.toFixed(2));
+		this.setMark(markModifier, mark, validated);
 	}
 
-	async setMark(mark, validated) {
+	async setMark(markModifier, mark, validated) {
 		let oldMark = this.mark;
 
+		this.markModifier = markModifier;
 		this.mark = mark;
 		this.validated = validated;
 
@@ -139,17 +153,24 @@ class Profile {
 			div.style.background = gradient(gradStart, gradEnd, i / gradStep);
 			this.right.appendChild(div);
 
-			this.markLeft.innerText = i + 1;
-			this.markRight.innerText = i + 1;
+			let m = (i + 1) / markModifier;
+			if (markModifier != 1)
+				m = m.toFixed(2);
+			this.markLeft.innerText = m;
+			this.markRight.innerText = m;
 		}
 		let j = 0;
-		for (let i = 0; i < mark; i++, j++) {
+		for (let i = 0; i < mark * markModifier; i++, j++) {
 			if (i < oldMark) {
 				appendBar.call(this, i);
 				j = -1;
 			} else
 				setTimeout((i) => appendBar.call(this, i), j * 20 + 400, i);
 		}
+		setTimeout(() => {
+			this.markLeft.innerText = `${mark}`;
+			this.markRight.innerText = `${mark}`;
+		}, j * 20 + 400);
 
 		await new Promise(r => setTimeout(r, j * 20 + 1500));
 	}
@@ -222,35 +243,47 @@ async function refreshMarks(slug, firstTime = false) {
 		let userJson = await userData.json();
 
 		if (!userJson || userJson.error) {
-			window.open(window.location.href, '_self');
-			return;
+			if (firstTime)
+				tryAgain();
+			return false;
 		}
 
+		let markModifier = 1;
 		let userFinalMark = -1;
 		let validated = false;
-		let userProjects = userJson.projects_users;
-		for (let userProject of userProjects) {
-			if (userProject.marked && userProject.project.slug == slug
-					&& userProject.final_mark > userFinalMark) {
-				userFinalMark = userProject.final_mark;
-				validated = userProject['validated?'];
+		if (slug === RANK_SLUG) {
+			userFinalMark = userJson.cursus_users[0].level;
+			markModifier = 10;
+			validated = userJson.cursus_users[0].level > 0;
+		} else {
+			let userProjects = userJson.projects_users;
+			for (let userProject of userProjects) {
+				if (userProject.marked && userProject.project.slug == slug
+						&& userProject.final_mark > userFinalMark) {
+					userFinalMark = userProject.final_mark;
+					validated = userProject['validated?'];
+				}
 			}
 		}
 
 		if (firstTime) {
-			let user = new Profile(p.login, userJson.image.link, userFinalMark, validated);
+			let user = new Profile(p.login, userJson.image.link, markModifier, userFinalMark, validated);
 			users.push(user);
 		} else if (marks[p.login] != userFinalMark) {
 			let user = users.find(u => u.login === p.login);
-			await user.setMark(userFinalMark, validated);
+			await user.setMark(markModifier, userFinalMark, validated);
 			calcInfo();
 			await sortUsers();
 		}
 	}
+	return true
 }
 
 async function ff(slug, name) {
 	mutex = true;
+
+	title.innerText = name;
+	container.innerHTML = '<div style="text-align: center;">Loading...</div>';
 
 	let data = await fetch('/db/data.json');
 	let dataJson = await data.json();
@@ -261,7 +294,11 @@ async function ff(slug, name) {
 	}
 
 	piscineux = dataJson.piscineux;
-	await refreshMarks(slug, true);
+	result = await refreshMarks(slug, true);
+	if (!result)
+		return;
+
+	container.innerHTML = '';
 
 	users.sort((a, b) => b.mark - a.mark);
 	for (let user of users) {
@@ -305,24 +342,23 @@ let logout = document.getElementById('logout');
 logout.parentElement.onclick = () =>
 	window.open('/logout', '_self');
 
-fetch('/db/projects.json').then(async response => {
-	if (!response.ok) {
-		container.innerHTML = 'Error loading the projects.<br>Try to sign in again.';
-		container.style.color = 'red';
-		container.style.textAlign = 'center';
-		container.style.fontSize = '2em';
-		container.style.fontWeight = 'bold';
-		return;
-	}
+let uid = window.location.pathname.split('/');
+uid = uid[uid.length - 1];
 
-	let data = await response.json();
-	let uid = window.location.pathname.split('/');
-	uid = uid[uid.length - 1];
+if (uid === 'ranking') {
+	ff(RANK_SLUG, 'Ranking');
+} else {
+	fetch(`/db/projects.json`).then(async response => {
+		if (!response.ok)
+			return tryAgain();
 
-	for (let project of data.projects) {
-		if (project.uid === uid) {
-			ff(project.slug, project.name);
-			break;
+		let data = await response.json();
+
+		for (let project of data.projects) {
+			if (project.uid === uid) {
+				ff(project.slug, project.name);
+				break;
+			}
 		}
-	}
-});
+	});
+}
