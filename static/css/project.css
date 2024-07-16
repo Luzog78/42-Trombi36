@@ -6,7 +6,7 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 12:41:34 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/14 21:05:29 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/16 19:12:23 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ body {
 	color: #888;
 	font-style: italic;
 	font-weight: 800;
+	text-wrap: nowrap;
 	top: 105px;
 }
 

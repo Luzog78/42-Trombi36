@@ -6,7 +6,7 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 13:53:38 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/16 15:57:54 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/16 19:10:45 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ async function sortUsers() {
 	let oldLogins = users.map(u => u.login);
 
 	users.sort((a, b) => b.mark - a.mark);
+	users.forEach((u, i) => u.loginDiv.innerText = `${i + 1}. ${u.login}`);
 
 	let newLogins = users.map(u => u.login);
 
@@ -238,15 +239,22 @@ async function refreshMarks(slug, firstTime = false) {
 			marks[user.login] = user.mark;
 		}
 	}
-	for (let p of piscineux) {
-		let userData = await fetch(`/db/user.json?login=${p.login}`);
-		let userJson = await userData.json();
 
-		if (!userJson || userJson.error) {
-			if (firstTime)
-				tryAgain();
-			return false;
-		}
+	let logins = piscineux.map(p => p.login);
+	if (firstTime)
+		console.log(`Fetching ${piscineux.length} users...`, logins);
+	let usersData = await fetch('/db/user.json?logins=' + logins.join(','));
+	let json = await usersData.json();
+	if (!json || json.error) {
+		if (firstTime)
+			tryAgain();
+		return false;
+	}
+
+	let usersJson = {};
+	json.forEach(u => usersJson[u.login] = u);
+	for (let p of piscineux) {
+		let userJson = usersJson[p.login];
 
 		let markModifier = 1;
 		let userFinalMark = -1;
@@ -265,13 +273,16 @@ async function refreshMarks(slug, firstTime = false) {
 				}
 			}
 		}
+		if (markModifier != 1)
+			userFinalMark = parseFloat(userFinalMark.toFixed(2));
 
 		if (firstTime) {
 			let user = new Profile(p.login, userJson.image.link, markModifier, userFinalMark, validated);
 			users.push(user);
 		} else if (marks[p.login] != userFinalMark) {
 			let user = users.find(u => u.login === p.login);
-			await user.setMark(markModifier, userFinalMark, validated);
+			console.log(`Mark changed for ${p.login} (${marks[p.login]} -> ${userFinalMark})`);
+			user.setMark(markModifier, userFinalMark, validated);
 			calcInfo();
 			await sortUsers();
 		}
@@ -301,6 +312,7 @@ async function ff(slug, name) {
 	container.innerHTML = '';
 
 	users.sort((a, b) => b.mark - a.mark);
+	users.forEach((u, i) => u.loginDiv.innerText = `${i + 1}. ${u.login}`);
 	for (let user of users) {
 		user.push();
 	}
@@ -309,6 +321,7 @@ async function ff(slug, name) {
 	mutex = false;
 
 	setInterval(async () => {
+		console.log('Refreshing...');
 		if (mutex)
 			return;
 		mutex = true;

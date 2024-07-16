@@ -80,6 +80,21 @@ def db_data_json():
 def db_user_json():
 	if not session.get(Data.X_ACCESS_TOKEN):
 		return jsonify({'error': '401 Unauthorized'}), 401
+	
+	if not request.args.get('login') and not request.args.get('logins'):
+		return jsonify({'error': '400 Bad Request: Forgot "login" or "logins" argument'}), 400
+	
+	if request.args.get('logins'):
+		logins = request.args.get('logins').split(',')
+		users = []
+		for login in logins:
+			filename = f'db/users/{login}.json'
+			try:
+				with open(filename, 'r') as f:
+					users.append(json.load(f))
+			except Exception:
+				users.append({'error': '404 Not Found', 'login': login})
+		return jsonify(users)
 
 	login = f'{request.args.get("login")}'.replace('/', '').replace('\\', '')[:32]
 	filename = f'db/users/{login}.json'
@@ -212,6 +227,7 @@ if __name__ == '__main__':
 
 	try:
 		print(f'§2Starting server on port §d{Data.PORT}')
+		# Data.app.run(port=Data.PORT, host='0.0.0.0')
 		waitress.serve(Data.app, port=Data.PORT, host='0.0.0.0')
 		print(f'\n§2Server running on:§r\n §7> §fPort: §d{Data.PORT}§r\n §7> §fURL: §d{Data.URL}§r\n')
 	except Exception as e:

@@ -6,7 +6,7 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 21:50:57 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/14 21:06:56 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/16 18:28:07 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,22 @@ function newCard(student, isTutor) {
 	const info = document.createElement('div');
 	info.classList.add('info');
 
+	const display = document.createElement('div');
+	display.classList.add('display');
+
 	const name = document.createElement('h4');
 	name.classList.add('name');
 	name.textContent = student.firstName;
-	info.appendChild(name);
+	display.appendChild(name);
+
+	if (student.location) {
+		const location = document.createElement('h5');
+		location.classList.add('location');
+		location.textContent = student.location;
+		display.appendChild(location);
+	}
+
+	info.appendChild(display);
 
 	const login = document.createElement('h5');
 	login.classList.add('login');

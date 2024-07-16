@@ -6,7 +6,7 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 21:28:48 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/14 16:05:13 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/16 18:27:34 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,12 @@ body {
 	width: calc(100% - 20px);
 }
 
+.user .info .display {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
 .user .info .name {
 	margin: 0;
 	padding: 0;
@@ -97,6 +103,20 @@ body {
 	display: inline-block;
 	font-size: 18px;
 	color: rgb(255, 147, 85);
+}
+
+.user .info .location {
+	margin: 0;
+	padding: 0;
+	padding-left: 6px;
+	padding-right: 6px;
+	display: inline-block;
+	align-content: center;
+	height: 15px;
+	font-size: 10px;
+	background: #0a0;
+	border-radius: 1000px;
+	opacity: .5;
 }
 
 .user .info .login {
