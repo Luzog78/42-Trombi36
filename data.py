@@ -7,11 +7,14 @@ from flask import Flask, session
 class Data:
 	KEY				= ''.join(chr(random.randint(32, 126)) for _ in range(100))
 
+	PORT			= 25577
+	URL				= f'http://luzog.fr:${PORT}/'
+
 	TOKEN_UID		= ''
 	TOKEN_SECRET	= ''
 	AUTHORIZATION	= ''
 	SCOPE			= 'public'
-	REDIRECT_URI	= 'http://luzog.fr:25577/auth'
+	REDIRECT_URI	= f'{URL}auth'
 	REDIRECT_SAFE	= urllib.parse.quote(REDIRECT_URI, safe='')
 	STATE			= '42'
 

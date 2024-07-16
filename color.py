@@ -123,8 +123,25 @@ def format(*args, end: str = M_RESET, char: str | None = None, code: dict[str, s
 	return string
 
 
+from datetime import datetime
+from pytz import timezone
+
+
+TIMEZONE = timezone("Europe/Paris")
+
+def log(*args, end: str = '\n', filename: str = 'log.txt'):
+	dt = datetime.now().astimezone(TIMEZONE).strftime('%Y-%m-%d_%H:%M:%S')
+	with open(filename, 'a') as f:
+		f.write(f'[{dt}]: {format(*args, end=end)}')
+
+
 _print = print
 
-
-def print(*args, end: str = M_RESET + '\n', char: str | None = None, code: dict[str, str] | None = None, styles: list[str] | None = None):
-	_print(format(*args, end=end, char=char, code=code, styles=styles), end='')
+def print(*args, end: str = M_RESET + '\n', char: str | None = None, code: dict[str, str] | None = None, styles: list[str] | None = None, logging: bool | str = True):
+	if logging:
+		if isinstance(logging, str):
+			log(format(*args, end=end, char=char, code=code, styles=styles), end='', filename=logging)
+		else:
+			log(format(*args, end=end, char=char, code=code, styles=styles), end='')
+	else:
+		_print(format(*args, end=end, char=char, code=code, styles=styles), end='')

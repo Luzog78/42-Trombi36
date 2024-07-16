@@ -206,8 +206,10 @@ if __name__ == '__main__':
 		pass
 
 	try:
+		print(f'§2Starting server on port §d{Data.PORT}')
 		# No more Data.app.run() here
-		waitress.serve(Data.app, port=25577, host='0.0.0.0')
+		waitress.serve(Data.app, port=Data.PORT, host='0.0.0.0')
+		print(f'\n§2Server running on:§r\n §7> §fPort: §d{Data.PORT}§r\n §7> §fURL: §d{Data.URL}§r\n')
 	except Exception as e:
 		print(f'§4Error while running server: §c{e}')
 		Data.running = False

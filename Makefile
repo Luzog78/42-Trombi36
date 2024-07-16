@@ -6,12 +6,13 @@
 #    By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 05:08:21 by ysabik            #+#    #+#              #
-#    Updated: 2024/07/14 21:04:45 by ysabik           ###   ########.fr        #
+#    Updated: 2024/07/16 12:06:19 by ysabik           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 EXECUTOR		=	python3
 MAIN_FILE		=	main.py
+LOG_FILE		=	log.txt
 
 
 RESET			=	\033[0m
@@ -32,9 +33,34 @@ all: run
 
 run:
 	@echo "$(RED)$$> $(MAGENTA)$(EXECUTOR) $(MAIN_FILE)$(RESET)"
-	@$(EXECUTOR) $(MAIN_FILE)
+	@$(EXECUTOR) $(MAIN_FILE) &
+
+
+kill:
+	@echo "$(RED)$$> $(MAGENTA)kill -9 $$(pgrep $(EXECUTOR))$(RESET)"
+	@kill -9 $$(pgrep $(EXECUTOR))
+
+
+sleep:
+	@sleep 1
+
+
+re: kill sleep run
 
 
 # **************************************************************************** #
 
-.PHONY: all run
+
+logs:
+	@echo "$(RED)$$> $(MAGENTA)watch -n0.3 -c cat $(LOG_FILE) '|' tail '-$$(($$LINES - 2))'$(RESET)"
+	@watch -n0.3 -c cat $(LOG_FILE) '|' tail '-$$(($$LINES - 2))'
+
+
+cat:
+	@echo "$(RED)$$> $(MAGENTA)cat $(LOG_FILE)$(RESET)"
+	@cat $(LOG_FILE)
+
+
+# **************************************************************************** #
+
+.PHONY: all run kill re logs cat
