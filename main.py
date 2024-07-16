@@ -1,4 +1,5 @@
 import json
+import waitress
 from flask import request, session, jsonify, render_template, send_file, redirect
 
 from color import print
@@ -61,9 +62,9 @@ def db_data_json():
 				} for _ in range(31)
 			]
 		})
-	month = f'{request.args.get('month', default=Data.POOL_MONTH)}'.replace('/', '').replace('\\', '')[:32]
-	year = f'{request.args.get('year', default=Data.POOL_YEAR)}'.replace('/', '').replace('\\', '')[:32]
-	filename = f'db/data ({month} {year}).json'
+	month = f'{request.args.get("month", default=Data.POOL_MONTH)}'.replace('/', '').replace('\\', '')[:32]
+	year = f'{request.args.get("year", default=Data.POOL_YEAR)}'.replace('/', '').replace('\\', '')[:32]
+	filename = f'db/data__({month}__{year}).json'
 	try:
 		return send_file(filename)
 	except Exception:
@@ -183,7 +184,7 @@ if __name__ == '__main__':
 		pass
 
 	try:
-		with open(f'db/data ({Data.POOL_MONTH} {Data.POOL_YEAR}).json', 'r') as f:
+		with open(f'db/data__({Data.POOL_MONTH}__{Data.POOL_YEAR}).json', 'r') as f:
 			data = json.load(f)
 		assert isinstance(data, dict)
 		for k, v in data.items():
@@ -204,4 +205,10 @@ if __name__ == '__main__':
 		print(f'§4Error while loading authorization key: §c{e}')
 		pass
 
-	Data.app.run(debug=False, port=5000, host='0.0.0.0')
+	try:
+		# No more Data.app.run() here
+		waitress.serve(Data.app, port=25577, host='0.0.0.0')
+	except Exception as e:
+		print(f'§4Error while running server: §c{e}')
+		Data.running = False
+		exit(1)

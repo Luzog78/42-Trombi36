@@ -34,11 +34,11 @@ def fetch_info(auth, assign_global=True):
 		result = Data.get_data(endpoint, **params)
 		if 'error' not in result:
 			users += result
-	with open(f'db/users ({Data.POOL_MONTH} {Data.POOL_YEAR}).json', 'w') as f:
+	with open(f'db/users__({Data.POOL_MONTH}__{Data.POOL_YEAR}).json', 'w') as f:
 		f.write(json.dumps(users, indent='\t'))
 
 	try:
-		with open(f'db/data ({Data.POOL_MONTH} {Data.POOL_YEAR}).json', 'r') as f:
+		with open(f'db/data__({Data.POOL_MONTH}__{Data.POOL_YEAR}).json', 'r') as f:
 			data = json.load(f)
 		assert isinstance(data, dict)
 	except Exception:
@@ -59,7 +59,7 @@ def fetch_info(auth, assign_global=True):
 			'pictureURL': user['image']['link'],
 			'active': user['active?'],
 		})
-	with open(f'db/data ({Data.POOL_MONTH} {Data.POOL_YEAR}).json', 'w') as f:
+	with open(f'db/data__({Data.POOL_MONTH}__{Data.POOL_YEAR}).json', 'w') as f:
 		f.write(json.dumps(data, indent='\t'))
 
 	if assign_global:
@@ -114,7 +114,7 @@ def check_whitelist(authorization):
 	try:
 		print(f'§aFetched user §b{me["login"]}§a!')
 
-		with open(f'db/users/{me['login']}.json', 'w') as f:
+		with open(f'db/users/{me["login"]}.json', 'w') as f:
 			f.write(json.dumps(me, indent='\t'))
 	except Exception:
 		pass

@@ -11,7 +11,7 @@ class Data:
 	TOKEN_SECRET	= ''
 	AUTHORIZATION	= ''
 	SCOPE			= 'public'
-	REDIRECT_URI	= 'http://127.0.0.1:5000/auth'
+	REDIRECT_URI	= 'http://luzog.fr:25577/auth'
 	REDIRECT_SAFE	= urllib.parse.quote(REDIRECT_URI, safe='')
 	STATE			= '42'
 
