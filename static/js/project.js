@@ -6,7 +6,7 @@
 /*   By: ysabik <ysabik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 13:53:38 by ysabik            #+#    #+#             */
-/*   Updated: 2024/07/16 19:10:45 by ysabik           ###   ########.fr       */
+/*   Updated: 2024/07/19 13:04:31 by ysabik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,10 +167,11 @@ class Profile {
 			} else
 				setTimeout((i) => appendBar.call(this, i), j * 20 + 400, i);
 		}
-		setTimeout(() => {
-			this.markLeft.innerText = `${mark}`;
-			this.markRight.innerText = `${mark}`;
-		}, j * 20 + 400);
+		setTimeout((mark) => {
+			let finalDisplay = mark == -1 ? 'N/A' : `${mark}`;
+			this.markLeft.innerText = `${finalDisplay}`;
+			this.markRight.innerText = `${finalDisplay}`;
+		}, j * 20 + 400, mark);
 
 		await new Promise(r => setTimeout(r, j * 20 + 1500));
 	}
@@ -375,3 +376,59 @@ if (uid === 'ranking') {
 		}
 	});
 }
+
+
+let scrollHeight = 0;
+let scrollY = 0;
+let scrollDesc = true;
+let scrollSpeed = 1;
+let scrollingAnimation = false;
+
+let scrollingInterval = setInterval(() => {
+	if (scrollingAnimation) {
+		if (scrollDesc) {
+			if (scrollY < scrollHeight) {
+				window.scrollBy(0, scrollSpeed);
+				scrollY += scrollSpeed;
+			} else {
+				scrollDesc = false;
+			}
+		} else {
+			if (scrollY > 0) {
+				window.scrollBy(0, -scrollSpeed);
+				scrollY -= scrollSpeed;
+			} else {
+				scrollDesc = true;
+			}
+		}
+	}
+}, 10);
+
+window.addEventListener('keydown', e => {
+	if (e.key === ' ') {
+		e.preventDefault();
+		if (scrollingAnimation)
+			scrollingAnimation = false;
+		else {
+			scrollHeight = document.body.scrollHeight;
+			scrollY = document.body.scrollTop;
+			scrollDesc = true;
+			scrollingAnimation = true;
+		}
+	}
+
+	if (e.key === 'ArrowUp') {
+		e.preventDefault();
+		if (scrollSpeed >= 20)
+			scrollSpeed = 20;
+		else
+			scrollSpeed++;
+	}
+	if (e.key === 'ArrowDown') {
+		e.preventDefault();
+		if (scrollSpeed <= 1)
+			scrollSpeed = 1;
+		else
+			scrollSpeed--;
+	}
+})
